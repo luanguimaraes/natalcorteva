@@ -1,4 +1,4 @@
-var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0;
+var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0;
 
 background = {
     x: 0,
@@ -11,89 +11,61 @@ background = {
     desenha: function(){
         back.desenha(this.x, this.y)
         back.desenha(this.x + back.largura, this.y);
-    },
-    
-    mover: function(evt){
-        switch (evt.keyCode) {
-            case 38:  /*seta para cima */
-                if (this.y - this.dy > 0){
-                    this.y -= this.dy;
-                }
-                break;
-            case 40:  /*set para baixo*/
-                if (this.y + this.dy < altura-30){
-                    this.y += this.dy;
-                }
-                break;
-              case 37:  /*set para esquerda*/
-                      this.x += velocidade;
-                  break;
-              case 39:  /*seta para direita*/
-                      this.x -= velocidade;
-                  break;
-              case 32:
-                  if(Time == 0){
-                    // tiro.insere();
-                    Time = 35;
-                  }
-          }
-      },
-
-      
+    }  
 }
-
 
 
 noel = {
     x: 0,
     y: 1120,
     pos: 0,
-    santa:[],
+    caminhar:[],
     atualiza: function(){
-        //santa = [santa1.desenha(this.x, this.y),santa2.desenha(this.x, this.y),santa3.desenha(this.x, this.y)]
-          
+        this.caminhar = [0,1,2,3,2,1,0,4,5,6,5,4];
     },
 
     desenha: function(){
-        //console.log(this.pos);
-        if(pos == 0){
-            gato.desenha(this.x, this.y)
-        }else if(pos == 1){
-            santa1.desenha(this.x, this.y)
-        }else if(pos == 2){
-            santa2.desenha(this.x, this.y)
-            
-        }
+        santa[this.caminhar[numpassosatual]].desenha(this.x, this.y)
+
+
+ 
     },
 
     mover: function(evt){
+        console.log(evt.keyCode);
         switch (evt.keyCode) {
-            case 38:  /*seta para cima */
+            case 38:
                 if (this.y - this.dy > 0){
                     this.y -= this.dy;
                 }
                 break;
-            case 40:  /*set para baixo*/
+            case 40:
                 if (this.y + this.dy < altura-30){
                     this.y += this.dy;
                 }
                 break;
-              case 37:  /*set para esquerda*/
-                      this.x += velocidade;
-                  break;
-              case 39:  /*seta para direita*/
+              case 37:
+                    if(this.x > 0){
+                      mov = true;
                       this.x -= velocidade;
+                      background.x += velocidade;
+                    }
+                  break;
+              case 39:
+                    if(this.x < largura - 1500){
+                        this.x += velocidade;
+                        mov = true;
+                        background.x -= velocidade;
+                    }
+                    console.log(largura)
                   break;
               case 32:
                   if(Time == 0){
-                    // tiro.insere();
                     Time = 35;
                   }
           }
       },
 }
-
-
 
 
 
@@ -131,8 +103,7 @@ function desenha(){
 main();
 
 function clique(event){
-    background.mover(event);
-    //noel.mover(event);
+    noel.mover(event);
     if(event.keyCode==80){
       if (pause == true) {
         pause = false;
@@ -146,22 +117,16 @@ function clique(event){
     mov = false;
   }  
 
-
-
-
-
   function loop(){
     setInterval(function(){
         if(mov){
-            if(pos > 1){
-                pos = 1
-            }else{
-                pos++;
-            }
-            console.log("pos loop: "+pos);
+            numpassosatual++;
+        }else{
+            numpassosatual = 0
         }
-        else{
-            pos = 0;
+        
+        if(numpassosatual == numpassostotal){
+            numpassosatual = 0
         }
-    }, 800);
+    }, 90);
   }
