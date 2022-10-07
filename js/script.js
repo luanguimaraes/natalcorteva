@@ -57,7 +57,7 @@ noel = {
     desenha: function(){
         //console.log(this.pos);
         if(pos == 0){
-            santa3.desenha(this.x, this.y)
+            gato.desenha(this.x, this.y)
         }else if(pos == 1){
             santa1.desenha(this.x, this.y)
         }else if(pos == 2){
