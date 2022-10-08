@@ -24,7 +24,7 @@ santa[6] = new Sprite(3300,779,225,309)
 
 carro = new Sprite(2749,439,458,282);
 
-presente = new Sprite(2817,162,243,141);
+present = new Sprite(2817,162,243,141);
 
 olaf = new Sprite(3151,139,267,363);
 
