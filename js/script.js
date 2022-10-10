@@ -1,4 +1,4 @@
-var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false;
+var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = true;
 
 background = {
     x: 0,
@@ -48,6 +48,10 @@ noel = {
 
     desenha: function(){
         santa[this.caminhar[numpassosatual]].desenha(this.x, this.y)
+    },
+
+    libera: function(){
+        outsystems = false;
     },
 
     mover: function(evt){
@@ -129,7 +133,9 @@ function desenha(){
 main();
 
 function clique(event){
-    noel.mover(event);
+    if(!outsystems){
+        noel.mover(event);
+    }
     if(event.keyCode==80){
       if (pause == true) {
         pause = false;
