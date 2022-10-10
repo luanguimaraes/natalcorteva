@@ -94,14 +94,14 @@ noel = {
 function main(){
     largura = 2685;
     altura = 1500;
-    canvas = document.getElementById("canvas");
+    canvas = document.getElementsByClassName("canvas")[0];
     canvas.width = largura;
     canvas.height = altura;
     ctx = canvas.getContext("2d");
     window.addEventListener('keydown', clique);
     window.addEventListener('keyup', clique2);
     img = new Image();
-    img.src = "img/sprite.png";
+    img.src = "https://corteva-dev.outsystemsenterprise.com/NatalSolidario/sprite.png";
     roda();
     loop();
 
