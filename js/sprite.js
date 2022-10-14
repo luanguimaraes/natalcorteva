@@ -30,4 +30,4 @@ olaf = new Sprite(3151,139,267,363);
 
 gato = new Sprite(3471,144,232,245);
 
-estrela = new Sprite(3430, 508, 335, 124);
+estrelacad = new Sprite(3430, 508, 335, 124);

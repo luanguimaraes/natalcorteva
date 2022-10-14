@@ -1,8 +1,13 @@
-var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false;
+var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false, dx=0, dy=0;
 
 background = {
     x: 0,
     y: 0,
+
+    atualiza: function(){
+        this.x -= dx * velocidade;
+        this.y == dy * velocidade;
+    },
 
     desenha: function(){
         back.desenha(this.x, this.y)
@@ -13,6 +18,11 @@ background = {
 treno = {
     x:0,
     y:1120,
+
+    atualiza: function(){
+        this.x -= dx * velocidade;
+        this.y == dy * velocidade;
+    },
 
     desenha: function(){
         carro.desenha(this.x,this.y)
@@ -28,7 +38,6 @@ presente = {
     },
 
     colidiu: function(){
-        //console.log(`noel x, ${noel.x+40}, presente x: ${this.x}`)
         if((noel.x+40) >= this.x && outsystems == false){
             outsystems = true;
             alert("foi");
@@ -36,20 +45,18 @@ presente = {
     }
 }
 
-miau = {
+estrela = {
     x: 2685,
     y: 0,
 
     atualiza: function(){
-        if(gato.largura)
+        if(estrelacad.largura)
         this.x -= 5;
         this.y += 1;
-        //console.log(this.x);
-        //console.log(gato.largura)
     },
 
     desenha: function(){
-        gato.desenha(this.x, this.y);
+        estrelacad.desenha(this.x, this.y);
     }
 }
 
@@ -62,16 +69,15 @@ boneco = {
     }
 }
 
-neve = {
+miau = {
     x: 0,
     y: 0,
-    _nev:[],
+    _miau:[],
     _sprite: [gato],
     tempoInsere: 10,
 
-
     insere: function(){
-        this._nev.push({
+        this._miau.push({
             x: Math.floor(Math.random()*(5000 - 5)+5),
             y: -gato.largura,
             largura: gato.largura,
@@ -79,32 +85,49 @@ neve = {
             sprite: this._sprite[0]
         });
         this.tempoInsere = 10 + Math.floor(40 * Math.random());
+
     },
 
     atualiza: function(){
         if(this.tempoInsere == 0){
-            //console.log(this.tempoInsere);
             this.insere();
         }else{
             this.tempoInsere--;
         }
-        console.log(this.tempoInsere);
-        for(var i = 0, tam = this._nev.length; i < tam; i++){
-            var nev = this._nev[i];
-            nev.y += velocidade;
-            if(nev.y <= -nev.altura){
-                this._nev.splice(i,1);
+
+        for(var i = 0, tam = this._miau.length; i < tam; i++){
+            var miau = this._miau[i];
+            miau.y += velocidade;
+            miau.x -= dx * velocidade;
+            //console.log(`miau y: ${this._miau[0].y} | miau altura: ${this._miau[0].altura}`)
+            if(miau.y > altura){
+                this._miau.splice(i,1);
                 tam--;
                 i--;
             }
         }
+
     },
 
     desenha: function(){
-        for(var i = 0, tam = this._nev.length; i < tam; i++){
-            var nev = this._nev[i];
+        for(var i = 0, tam = this._miau.length; i < tam; i++){
+            var miau = this._miau[i];
+            gato.desenha(miau.x, miau.y, miau.largura, miau.altura);
+        }
+    },
 
-            gato.desenha(nev.x, nev.y, nev.largura, nev.altura);
+    colidiu: function(){
+        for(var i = 0, tam = this._miau.length; i < tam; i++){
+            var miau = this._miau[i];
+            obj1 = {x: miau.x, y: miau.y, l: gato.largura, a: gato.altura}
+            obj2 = {x: noel.x, y: noel.y, l: santa[noel.caminhar[numpassosatual]].largura, a: santa[noel.caminhar[numpassosatual]].altura}
+            if(colisao(obj1, obj2) == true){
+                this._miau.splice(i,1);
+                tam--;
+                i--;
+                game.pontos++;
+                console.log(game.pontos);
+            }
         }
     }
 }
@@ -115,70 +138,65 @@ noel = {
     y: 1120,
     pos: 0,
     caminhar:[0,1,2,3,2,1,0,4,5,6,5,4],
+
     atualiza: function(){
-        
+        this.x += dx * velocidade;
+        this.y == dy * velocidade;
     },
 
-
     desenha: function(){
-        santa[this.caminhar[numpassosatual]].desenha(this.x, this.y)
+        santa[this.caminhar[numpassosatual]].desenha(this.x, this.y);
     },
 
     libera: function(){
         outsystems = false;
+    }
+}
+
+game = {
+    iniciado: true,
+    pontos: 0,
+    tempo: 5,
+
+    iniciar: function(){
+        this.pontos = 0;
+        this.tempo = 30;
+        this.iniciado = true;
     },
 
+    finalizar: function(){
+        this.iniciado = false;
+        console.log("finalizou");
+    },
 
-    mover: function(evt){
-        //console.log(evt);
-
-        if(evt.type == "click"){
-           if(evt.x > (this.x + 75)){
-                this.x += velocidade;
-           }else{
-                this.x -= velocidade;
-           }
-        }
+    addpontos: function(){
+        this.pontos = pontos + 1;
+    }
+}
 
 
+function colisao(obj1, obj2){
 
-        switch (evt.keyCode) {
-            case 38:
-                if (this.y - this.dy > 0){
-                    this.y -= this.dy;
-                }
-                break;
-            case 40:
-                if (this.y + this.dy < altura-30){
-                    this.y += this.dy;
-                }
-                break;
-            case 37:
-                if(this.x > 0){
-                    mov = true;
-                    this.x -= velocidade;
-                    background.x += velocidade;
-                    treno.x += velocidade;
-                    presente.x += velocidade;
-                    boneco.x += velocidade;
-                }
-                break;
-            case 39:
-                if(this.x < largura - 1500){
-                    this.x += velocidade;
-                    mov = true;
-                    background.x -= velocidade;
-                    treno.x -= velocidade;
-                    presente.x -= velocidade;
-                    boneco.x -= velocidade;
-                }
-                break;
-            case 32:
-                if(Time == 0){
-                    Time = 35;
-                }
-          }
-      },
+    let i = 0;
+    let colidiu = false;
+
+    let pontos_obj1 = [{x:obj1.x, y:obj1.y},
+                       {x:obj1.x+obj1.l, y:obj1.y},
+                       {x:obj1.x+obj1.l, y:obj1.y+obj1.a},
+                       {x:obj1.x, y:obj1.y+obj1.a}];
+
+    let pontos_obj2 = [{x:obj2.x, y:obj2.y},
+                       {x:obj2.x+obj2.l, y:obj2.y},
+                       {x:obj2.x+obj2.l, y:obj2.y+obj2.a},
+                       {x:obj2.x, y:obj2.y+obj2.a}];
+
+    
+    while((colidiu==false) && (i<3)){
+        ((pontos_obj1[i].x >= obj2.x && pontos_obj1[i].x <= obj2.x+obj2.l && pontos_obj1[i].y >= obj2.y && pontos_obj1[i].y <= obj2.y+obj2.a)
+        ||
+        (pontos_obj2[i].x >= obj1.x && pontos_obj2[i].x <= obj1.x+obj1.l && pontos_obj2[i].y >= obj1.y && pontos_obj2[i].y <= obj1.y+obj1.a))?colidiu=true:i++;
+    }
+    return colidiu;
 }
 
 
@@ -190,8 +208,8 @@ function main(){
     canvas.width = largura;
     canvas.height = altura;
     ctx = canvas.getContext("2d");
-    window.addEventListener('keydown', clique);
-    window.addEventListener('keyup', clique2);
+    window.addEventListener('keydown', keydown);
+    window.addEventListener('keyup', keyup);
     //window.addEventListener('click', mouseup);
     //window.addEventListener('mousedown', mousedown);
     img = new Image();
@@ -201,16 +219,14 @@ function main(){
 
 }
 var i = 0;
-function mouseup(event){
-    //i++;
-    //console.log(i);
-    //console.log("clicou");
+
+
+function mousedown(evt){
+
 }
 
-function mousedown(event){
-    out = document.getElementById("out");
-    out.innerHTML += event;
-    //console.log(event);
+function mouseup(event){
+
 }
 
 
@@ -221,46 +237,66 @@ function roda(){
 }
 
 function atualiza(){
-    //background.atualiza();
-   //treno.atualiza();
-    //noel.atualiza();
+    background.atualiza();
+    treno.atualiza();
+    noel.atualiza();
+    estrela.atualiza();
     miau.atualiza();
     presente.colidiu();
-    neve.atualiza();
+    miau.colidiu();
 }
 
 function desenha(){
     background.desenha();
-    neve.desenha();
     treno.desenha();
+    noel.desenha();
     presente.desenha();
     boneco.desenha();
-    noel.desenha();
-    //ctx.scale(0.5,0.5);
-    miau.desenha();
-    //ctx.scale(1,1);
-    
+    estrela.desenha();
+    miau.desenha(); 
 }
 main();
 
-function clique(event){
-    if(!outsystems){
-        noel.mover(event);
+function keydown(evt){
+    mov = true;
+    switch (evt.keyCode) {
+        case 37:
+            dx =- 1;
+            break;
+        case 38:
+            dy =- 1;
+            break;
+        case 39:
+            dx = 1;
+            break;
+        case 40:
+            dy = 1;
+            break;
     }
-    if(event.keyCode==80){
-      if (pause == true) {
-        pause = false;
-      }else {
-        pause = true;
-      }
-    }
-  }
+}
 
-  function clique2(event){
+  
+function keyup(evt){
     mov = false;
-  }  
+    switch (evt.keyCode) {
+        case 37:
+            dx = 0;
+            break;
+        case 38:
+            dy = 0;
+            break;
+        case 39:
+            dx = 0;
+            break;
+        case 40:
+            dy = 0;
+            break;
+    }
+}  
 
-  function loop(){
+
+
+function loop(){
     setInterval(function(){
         if(mov){
             numpassosatual++;
@@ -271,5 +307,14 @@ function clique(event){
         if(numpassosatual == numpassostotal){
             numpassosatual = 0
         }
-    }, 90);
-  }
+    }, 50);
+}
+
+function gametempo(){
+    if(game.tempo == 0 && game.iniciado){
+        game.finalizar();
+    }else if(game.iniciado){
+        game.tempo--;
+    }
+}
+setInterval(gametempo,1000)
