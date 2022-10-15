@@ -89,10 +89,12 @@ miau = {
     },
 
     atualiza: function(){
-        if(this.tempoInsere == 0){
+        if(this.tempoInsere == 0 && game.iniciado){
             this.insere();
-        }else{
+        }else if(game.iniciado){
             this.tempoInsere--;
+        }else{
+            this.tempoInsere = 10;
         }
 
         for(var i = 0, tam = this._miau.length; i < tam; i++){
@@ -126,7 +128,6 @@ miau = {
                 tam--;
                 i--;
                 game.pontos++;
-                console.log(game.pontos);
             }
         }
     }
@@ -154,29 +155,37 @@ noel = {
 }
 
 game = {
-    iniciado: true,
+    x:100,
+    y:100,
+    iniciado: false,
     pontos: 0,
-    tempo: 5,
+    tempo: 30,
 
-    iniciar: function(){
+    inicia: function(){
         this.pontos = 0;
         this.tempo = 30;
         this.iniciado = true;
     },
 
-    finalizar: function(){
+    finaliza: function(){
         this.iniciado = false;
-        console.log("finalizou");
     },
 
-    addpontos: function(){
+    desenha: function(){
+        ctx.fillStyle = "red";
+        ctx.font = "60px Arial Black";
+        ctx.fillText(this.tempo+" seg",50,85);
+        ctx.fillText(this.pontos+" pts",50,185);
+    },
+
+    addponto: function(){
         this.pontos = pontos + 1;
-    }
+    },
+
 }
 
 
 function colisao(obj1, obj2){
-
     let i = 0;
     let colidiu = false;
 
@@ -194,7 +203,8 @@ function colisao(obj1, obj2){
     while((colidiu==false) && (i<3)){
         ((pontos_obj1[i].x >= obj2.x && pontos_obj1[i].x <= obj2.x+obj2.l && pontos_obj1[i].y >= obj2.y && pontos_obj1[i].y <= obj2.y+obj2.a)
         ||
-        (pontos_obj2[i].x >= obj1.x && pontos_obj2[i].x <= obj1.x+obj1.l && pontos_obj2[i].y >= obj1.y && pontos_obj2[i].y <= obj1.y+obj1.a))?colidiu=true:i++;
+        (pontos_obj2[i].x >= obj1.x && pontos_obj2[i].x <= obj1.x+obj1.l && pontos_obj2[i].y >= obj1.y && pontos_obj2[i].y <= obj1.y+obj1.a))
+        ?colidiu=true:i++;
     }
     return colidiu;
 }
@@ -254,6 +264,9 @@ function desenha(){
     boneco.desenha();
     estrela.desenha();
     miau.desenha(); 
+    if(game.iniciado){
+        game.desenha();
+    }
 }
 main();
 
@@ -312,7 +325,7 @@ function loop(){
 
 function gametempo(){
     if(game.tempo == 0 && game.iniciado){
-        game.finalizar();
+        game.finaliza();
     }else if(game.iniciado){
         game.tempo--;
     }
