@@ -1,4 +1,4 @@
-var canvas, ctx, altura, largura, img, velocidade = 5, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false, dx=0, dy=0;
+var canvas, ctx, altura, largura, img, velocidade = 5, mov = false, numpassostotal= 12, numpassosatual = 0, outsystems = false, dx=0, dy=0;
 
 background = {
     x: 0,
@@ -35,8 +35,9 @@ treno = {
 }
 
 presente = {
-    x:2400,
+    x:2200,
     y:1250,
+    ativo: false,
 
     atualiza: function(){
         if(noel.limite()){
@@ -45,15 +46,11 @@ presente = {
     },
 
     desenha: function(){
-        present.desenha(this.x,this.y)
+        if(this.ativo){
+            present.desenha(this.x,this.y)
+        }
     },
 
-    colidiu: function(){
-        if((noel.x+40) >= this.x && outsystems == false){
-            outsystems = true;
-            alert("foi");
-        }
-    }
 }
 
 estrela = {
@@ -95,11 +92,17 @@ arvore = {
         if(noel.limite()){
             this.x -= dx * velocidade;
         }
-
     },
 
     desenha: function(){
         arvorenatal.desenha(this.x, this.y);
+    },
+
+    colidiu: function(){
+        if((noel.x + 130) >= (this.x + (arvorenatal.largura/2) ) && outsystems == false){
+            outsystems = true;
+            alert("foi");
+        }
     }
 }
 
@@ -173,7 +176,8 @@ noel = {
     y: 1120,
     pos: 0,
     //caminhar:[0,1,2,3,2,1,0,4,5,6,5,4],
-    caminhar:[3,4,5,6,5,4,3,2,1,0,1,2],
+    caminhar: [3,4,5,6,5,4,3,2,1,0,1,2],
+    presente: true,
 
     atualiza: function(){
         if(this.x >= 0){
@@ -307,7 +311,7 @@ function atualiza(){
     boneco.atualiza();
     estrela.atualiza();
     miau.atualiza();
-    presente.colidiu();
+    arvore.colidiu();
     miau.colidiu();
 }
 

@@ -21,6 +21,14 @@ santa[4] = new Sprite(3864,779,227,294);
 santa[5] = new Sprite(4132,784,238,294);
 santa[6] = new Sprite(4412,778,241,294);
 
+santa[7] = new Sprite(2754,1140,223,298);
+santa[8] = new Sprite(3042,1147,223,298);
+santa[9] = new Sprite(3316,1140,223,306);
+santa[10] = new Sprite(3595,1166,223,292);
+santa[11] = new Sprite(3862,1169,223,292);
+santa[12] = new Sprite(4127,1174,237,292);
+santa[13] = new Sprite(4407,1170,242,292);
+
 
 carro = new Sprite(3196,44,455,280);
 
