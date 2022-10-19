@@ -1,12 +1,16 @@
-var canvas, ctx, altura, largura, img, velocidade = 10, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false, dx=0, dy=0;
+var canvas, ctx, altura, largura, img, velocidade = 5, mov = false, pos = 0, numpassostotal= 12, numpassosatual = 0, outsystems = false, dx=0, dy=0;
 
 background = {
     x: 0,
     y: 0,
 
     atualiza: function(){
-        this.x -= dx * velocidade;
-        this.y == dy * velocidade;
+    
+       if(noel.limite()){
+            this.x -= dx * velocidade;
+       }
+    
+
     },
 
     desenha: function(){
@@ -20,8 +24,9 @@ treno = {
     y:1120,
 
     atualiza: function(){
-        this.x -= dx * velocidade;
-        this.y == dy * velocidade;
+        if((this.x - dx) <= 0){
+            this.x -= dx * velocidade;
+        }
     },
 
     desenha: function(){
@@ -32,6 +37,12 @@ treno = {
 presente = {
     x:2400,
     y:1250,
+
+    atualiza: function(){
+        if(noel.limite()){
+            this.x -= dx * velocidade;
+        }
+    },
 
     desenha: function(){
         present.desenha(this.x,this.y)
@@ -64,8 +75,31 @@ boneco = {
     x: 2600,
     y: 1120,
 
+    atualiza: function(){
+        if(noel.limite()){
+            this.x -= dx * velocidade;
+       }
+    },
+
     desenha: function(){
         olaf.desenha(this.x, this.y);
+    }
+}
+
+arvore = {
+    x: 1800,
+    y: 300,
+
+    atualiza: function(){
+        console.log(noel.limite());
+        if(noel.limite()){
+            this.x -= dx * velocidade;
+        }
+
+    },
+
+    desenha: function(){
+        arvorenatal.desenha(this.x, this.y);
     }
 }
 
@@ -138,11 +172,29 @@ noel = {
     x: 0,
     y: 1120,
     pos: 0,
-    caminhar:[0,1,2,3,2,1,0,4,5,6,5,4],
+    //caminhar:[0,1,2,3,2,1,0,4,5,6,5,4],
+    caminhar:[3,4,5,6,5,4,3,2,1,0,1,2],
 
     atualiza: function(){
-        this.x += dx * velocidade;
-        this.y == dy * velocidade;
+        if(this.x >= 0){
+            this.x += dx * velocidade;
+        }else{
+            this.x = 0;
+        }
+
+        if(this.x >= largura-santa[this.caminhar[numpassosatual]].largura){
+            this.x = largura-santa[this.caminhar[numpassosatual]].largura;
+
+        }
+
+    },
+
+    limite: function(){
+        //console.log(`noel x: ${this.x} | ${largura-santa[this.caminhar[numpassosatual]].largura-10}`)
+        if(this.x > 0 && this.x < largura-santa[this.caminhar[numpassosatual]].largura-50){
+            return true;
+        }
+        return false;
     },
 
     desenha: function(){
@@ -249,7 +301,10 @@ function roda(){
 function atualiza(){
     background.atualiza();
     treno.atualiza();
+    arvore.atualiza();
     noel.atualiza();
+    presente.atualiza();
+    boneco.atualiza();
     estrela.atualiza();
     miau.atualiza();
     presente.colidiu();
@@ -259,9 +314,10 @@ function atualiza(){
 function desenha(){
     background.desenha();
     treno.desenha();
-    noel.desenha();
+    arvore.desenha();
     presente.desenha();
     boneco.desenha();
+    noel.desenha();
     estrela.desenha();
     miau.desenha(); 
     if(game.iniciado){

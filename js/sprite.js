@@ -13,21 +13,23 @@ function Sprite(x, y , largura, altura){
 back = new Sprite(0,0,2697,1500);
 santa = [];
 
-santa[0] = new Sprite(2725,1180,223,298);
-santa[1] = new Sprite(2725,1180,223,298);
-santa[2] = new Sprite(3259,1190,242,298);
-santa[3] = new Sprite(3534,1186,250,297);
-santa[4] = new Sprite(2735,775,225,304);
-santa[5] = new Sprite(3025,780,225,309);
-santa[6] = new Sprite(3300,779,225,309)
+santa[0] = new Sprite(2757,749,224,299);
+santa[1] = new Sprite(3047,755,224,299);
+santa[2] = new Sprite(3322,753,224,303);
+santa[3] = new Sprite(3600,775,224,295);
+santa[4] = new Sprite(3864,779,227,294);
+santa[5] = new Sprite(4132,784,238,294);
+santa[6] = new Sprite(4412,778,241,294);
 
 
-carro = new Sprite(2749,439,458,282);
+carro = new Sprite(3196,44,455,280);
 
-present = new Sprite(2817,162,243,141);
+present = new Sprite(3722,119,230,132);
 
-olaf = new Sprite(3151,139,267,363);
+olaf = new Sprite(4077,41,267,363);
 
-gato = new Sprite(3471,144,232,245);
+gato = new Sprite(4470,75,226,237);
 
-estrelacad = new Sprite(3430, 508, 335, 124);
+estrelacad = new Sprite(2770, 153, 338, 89);
+
+arvorenatal = new Sprite(4865,399,791,1069);
