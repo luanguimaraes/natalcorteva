@@ -1,6 +1,18 @@
-audio = document.getElementsByClassName('audio')[0];
+music = document.getElementsByClassName('audio')[0];
+hohoho = document.getElementsByClassName('audio')[1];
+
+music.volume = 0.1;
+
+
 source = document.createElement("source");
-source.setAttribute("src","audio/natal.mp3");
 source.setAttribute("type","audio/mpeg");
-audio.appendChild(source);
+source.setAttribute("src","audio/natal.mp3");
+music.appendChild(source);
+
+source = document.createElement("source");
+source.setAttribute("type","audio/mpeg");
+source.setAttribute("src","audio/hohoho.wav");
+hohoho.appendChild(source);
+
+
 

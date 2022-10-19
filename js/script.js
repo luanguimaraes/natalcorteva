@@ -79,6 +79,16 @@ boneco = {
 
     desenha: function(){
         olaf.desenha(this.x, this.y);
+    },
+
+    colidiu: function(){
+        obj1 = {x: this.x, y: this.y, l: olaf.largura, a: olaf.altura}
+        obj2 = {x: noel.x, y: noel.y, l: santa[noel.caminhar[noel.numpassosatual]].largura, a: santa[noel.caminhar[noel.numpassosatual]].altura}
+        if(colisao(obj1, obj2) == true){
+            //outsystems actions
+
+            //end outsystems actions
+        }
     }
 }
 
@@ -87,7 +97,6 @@ arvore = {
     y: 300,
 
     atualiza: function(){
-        //console.log(noel.limite());
         if(noel.limite()){
             this.x -= dx * velocidade;
         }
@@ -98,7 +107,6 @@ arvore = {
     },
 
     colidiu: function(){
-        //console.log(presente.ativo);
         if((noel.x + 130) >= (this.x + (arvorenatal.largura/2) ) && outsystems == false && presente.ativo == false){
             noel.entregarpresente();
         }
@@ -179,24 +187,21 @@ noel = {
     caminhar: [3,4,5,6,5,4,3,2,1,0,1,2],
 
     atualiza: function(){
-        if(this.x >= 0){
+        tst = this.x
+        if(this.limite()){
             this.x += dx * velocidade;
-        }else{
-            this.x = 0;
-        }
-
-        if(this.x >= largura-santa[this.caminhar[this.numpassosatual]].largura){
-            this.x = largura-santa[this.caminhar[this.numpassosatual]].largura;
         }
     },
 
     limite: function(){
-        console.log(`noel x: ${this.x} | background: ${background.x}`);
-        if(this.x > 0 && this.x < largura-santa[this.caminhar[this.numpassosatual]].largura-50){
+
+            tst = this.x
+            if((tst += dx * velocidade) < 0 || (tst + 220) > largura){
+                return false;
+            }
             return true;
-        }
-        //dx=0;
-        return false;
+  
+
     },
 
     desenha: function(){
@@ -239,6 +244,9 @@ game = {
 
     finaliza: function(){
         this.iniciado = false;
+        //outsystems actions
+
+        //end outsystems actions
     },
 
     desenha: function(){
@@ -320,13 +328,13 @@ function atualiza(){
     background.atualiza();
     treno.atualiza();
     arvore.atualiza();
-    noel.atualiza();
     presente.atualiza();
     boneco.atualiza();
     estrela.atualiza();
     miau.atualiza();
     arvore.colidiu();
     miau.colidiu();
+    noel.atualiza();
 }
 
 function desenha(){
@@ -352,7 +360,8 @@ function keydown(evt){
                 dx =- 1;
                 break;
             case 38:
-                dy =- 1;
+                hohoho.play();
+                boneco.colidiu();
                 break;
             case 39:
                 noel.andando = true;
@@ -367,15 +376,16 @@ function keydown(evt){
 
   
 function keyup(evt){
-    noel.andando = false;
     switch (evt.keyCode) {
         case 37:
+            noel.andando = false;
             dx = 0;
             break;
         case 38:
             dy = 0;
             break;
         case 39:
+            noel.andando = false;
             dx = 0;
             break;
         case 40:
