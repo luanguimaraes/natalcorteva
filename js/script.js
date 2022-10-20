@@ -260,7 +260,60 @@ game = {
         this.pontos = pontos + 1;
     },
 
+},
+
+neve = {
+    x: 0,
+    y: 0,
+    _neve:[],
+    tempoInsere: 10,
+
+    insere: function(){
+        this._neve.push({
+            x: Math.floor(Math.random()*(5000 - 5)+5),
+            y: 0,
+            a: (70+(Math.random()*0.5))/100,
+            rad: Math.random() * 5,
+        });
+        this.tempoInsere = 10 + Math.floor(40 * Math.random());
+
+    },
+
+    atualiza: function(){
+        this.insere();
+
+        for(var i = 0, tam = this._neve.length; i < tam; i++){
+            var neve = this._neve[i];
+            neve.y += velocidade;
+            if(noel.limite()){
+                neve.x -= dx * velocidade;
+            }
+            
+            if(neve.y > altura){
+                this._neve.splice(i,1);
+                tam--;
+                i--;
+            }
+        }
+
+    },
+
+    desenha: function(){
+        for(var i = 0, tam = this._neve.length; i < tam; i++){
+            var neve = this._neve[i];
+            ctx.beginPath();
+            ctx.arc(neve.x, neve.y, neve.rad, 0, 2 * Math.PI);
+            ctx.lineWidth = 1;
+            ctx.fillStyle = 'rgba(255,255,255,1)'
+            ctx.fill();
+            /*
+            ctx.strokeStyle = 'rgba(255,255,255,'+neve.a+')';
+            ctx.stroke();
+            */
+        }
+    }
 }
+
 
 
 function colisao(obj1, obj2){
@@ -335,6 +388,7 @@ function atualiza(){
     arvore.colidiu();
     miau.colidiu();
     noel.atualiza();
+    neve.atualiza();
 }
 
 function desenha(){
@@ -345,7 +399,8 @@ function desenha(){
     boneco.desenha();
     noel.desenha();
     estrela.desenha();
-    miau.desenha(); 
+    neve.desenha(); 
+    miau.desenha();
     if(game.iniciado){
         game.desenha();
     }
