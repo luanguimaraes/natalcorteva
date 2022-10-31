@@ -29,3 +29,6 @@ olaf = new Sprite(4077,41,267,363);
 gato = new Sprite(4470,75,226,237);
 estrelacad = new Sprite(2770, 153, 338, 89);
 arvorenatal = new Sprite(4865,399,791,1069);
+menu1 = new Sprite(3210,480,167,125);
+menu2 = new Sprite(3457,483,126,126);
+placa = new Sprite(3752,402,211,272);

@@ -92,6 +92,47 @@ boneco = {
     }
 }
 
+plaquinha = {
+    x: 3300,
+    y: 1120,
+
+    atualiza: function(){
+        if(noel.limite()){
+            this.x -= dx * velocidade;
+        }
+    },
+
+    desenha: function(){
+        placa.desenha(this.x, this.y);
+    },
+}
+
+menuduvida = {
+    x: 50,
+    y: 160,
+
+    atualiza: function(){
+
+    },
+
+    desenha: function(){
+        menu1.desenha(this.x, this.y);
+    },
+}
+
+menucartinha = {
+    x: 45,
+    y: 300,
+
+    atualiza: function(){
+
+    },
+
+    desenha: function(){
+        menu2.desenha(this.x, this.y);
+    },
+}
+
 arvore = {
     x: 1800,
     y: 300,
@@ -351,8 +392,8 @@ function main(){
     ctx = canvas.getContext("2d");
     window.addEventListener('keydown', keydown);
     window.addEventListener('keyup', keyup);
-    //window.addEventListener('click', mouseup);
-    //window.addEventListener('mousedown', mousedown);
+    window.addEventListener('mouseup', mouseup);
+    window.addEventListener('mousedown', mousedown);
     img = new Image();
     img.src = "img/sprite.png";
     roda();
@@ -360,16 +401,6 @@ function main(){
 
 }
 var i = 0;
-
-
-function mousedown(evt){
-
-}
-
-function mouseup(event){
-
-}
-
 
 function roda(){
     atualiza();
@@ -383,12 +414,15 @@ function atualiza(){
     arvore.atualiza();
     presente.atualiza();
     boneco.atualiza();
+    plaquinha.atualiza();
     estrela.atualiza();
     miau.atualiza();
     arvore.colidiu();
     miau.colidiu();
     noel.atualiza();
     neve.atualiza();
+    menuduvida.atualiza();
+    menucartinha.atualiza();
 }
 
 function desenha(){
@@ -397,15 +431,34 @@ function desenha(){
     arvore.desenha();
     presente.desenha();
     boneco.desenha();
+    plaquinha.desenha();
     noel.desenha();
     estrela.desenha();
     neve.desenha(); 
     miau.desenha();
+    menuduvida.desenha();
+    menucartinha.desenha();
     if(game.iniciado){
         game.desenha();
     }
 }
 main();
+
+function mousedown(evt){
+    console.log(evt.x)
+    if(evt.x > (noel.x+75)){
+        noel.andando = true;
+        dx = 1;
+    }else if(evt.x < noel.x){
+        noel.andando = true;
+        dx = -1;
+    }
+}
+
+function mouseup(evt){
+    noel.andando = false;
+    dx = 0;
+}
 
 function keydown(evt){
     if(!outsystems){
