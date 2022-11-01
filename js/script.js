@@ -3,10 +3,12 @@ var canvas, ctx, altura, largura, img, velocidade = 5, dx=0, dy=0, outsystems = 
 background = {
     x: 0,
     y: 0,
+    limite: 2697,
 
     atualiza: function(){
        if(noel.limite()){
             this.x -= dx * velocidade;
+            this.limite -= dx * velocidade;
        }
     
     },
@@ -56,7 +58,7 @@ estrela = {
     y: -75,
 
     atualiza: function(){
-        if(!outsystems){
+        if(!outsystems && this.x >= -estrelacad.largura){
             this.x -= velocidade + 1*(dx);
             this.y += 1;
         }
@@ -84,9 +86,10 @@ boneco = {
     colidiu: function(){
         obj1 = {x: this.x, y: this.y, l: olaf.largura, a: olaf.altura}
         obj2 = {x: noel.x, y: noel.y, l: santa[noel.caminhar[noel.numpassosatual]].largura, a: santa[noel.caminhar[noel.numpassosatual]].altura}
-        if(colisao(obj1, obj2) == true){
+        if(colisao(obj1, obj2) == true && game.iniciado == false){
+            noel.bloqueia();
             //outsystems actions
-
+            //$actions.PopupEasterEgg(true)    
             //end outsystems actions
         }
     }
@@ -105,32 +108,61 @@ plaquinha = {
     desenha: function(){
         placa.desenha(this.x, this.y);
     },
+
+    colidiu: function(){
+        obj1 = {x: this.x+40, y: this.y, l: placa.largura-80, a: placa.altura}
+        obj2 = {x: noel.x, y: noel.y, l: santa[noel.caminhar[noel.numpassosatual]].largura, a: santa[noel.caminhar[noel.numpassosatual]].altura}
+        if(colisao(obj1, obj2) == true && game.iniciado == false){
+            //outsystems actions
+            //$actions.PopupCreditos(true)
+            //end outsystems actions
+        }else{
+            //$actions.PopupCreditos(false)
+        }
+    }
 }
 
 menuduvida = {
     x: 50,
     y: 160,
+    ativo: false,
 
     atualiza: function(){
 
     },
 
     desenha: function(){
-        menu1.desenha(this.x, this.y);
+        if(this.ativo){
+            menu1.desenha(this.x, this.y);
+        }
     },
+
+    clicou: function(evt){
+        obj = {x: this.x, y: this.y, l: menu1.largura, a: menu1.altura};
+        if(click(evt,obj)){
+            alert("clicou");
+        }
+    }
 }
 
 menucartinha = {
-    x: 45,
+    x: 50,
     y: 300,
+    ativo: false,
 
     atualiza: function(){
 
     },
 
     desenha: function(){
-        menu2.desenha(this.x, this.y);
+        if(this.ativo){
+            menu2.desenha(this.x, this.y);
+        }
     },
+
+    clicou: function(evt){
+
+    }
 }
 
 arvore = {
@@ -186,7 +218,7 @@ miau = {
             var miau = this._miau[i];
             miau.y += velocidade;
             miau.x -= dx * velocidade;
-            if(miau.y > altura){
+            if(miau.y > altura || (background.limite >= miau.x - 10  && background.limite <= miau.x + gato.largura + 10)){
                 this._miau.splice(i,1);
                 tam--;
                 i--;
@@ -242,7 +274,6 @@ noel = {
             }
             return true;
   
-
     },
 
     desenha: function(){
@@ -265,7 +296,7 @@ noel = {
         presente.ativo = true;
 
         //outsystems actions
-
+        //$actions.OpenPopup(true);
         //end outsystems actions
     }
 }
@@ -285,16 +316,17 @@ game = {
 
     finaliza: function(){
         this.iniciado = false;
+        outsystems = true;
         //outsystems actions
-
+        //$actions.FinalizarGameOnClick(this.pontos);
         //end outsystems actions
     },
 
     desenha: function(){
         ctx.fillStyle = "red";
-        ctx.font = "60px Arial Black";
+        ctx.font = "50px Arial Black";
         ctx.fillText(this.tempo+" seg",50,85);
-        ctx.fillText(this.pontos+" pts",50,185);
+        ctx.fillText(this.pontos+" pts",50,145);
     },
 
     addponto: function(){
@@ -308,6 +340,7 @@ neve = {
     y: 0,
     _neve:[],
     tempoInsere: 10,
+    limite: 300,
 
     insere: function(){
         this._neve.push({
@@ -317,11 +350,12 @@ neve = {
             rad: Math.random() * 5,
         });
         this.tempoInsere = 10 + Math.floor(40 * Math.random());
-
     },
 
     atualiza: function(){
-        this.insere();
+        if (this._neve.length <= this.limite){
+            this.insere();
+        }
 
         for(var i = 0, tam = this._neve.length; i < tam; i++){
             var neve = this._neve[i];
@@ -330,7 +364,7 @@ neve = {
                 neve.x -= dx * velocidade;
             }
             
-            if(neve.y > altura){
+            if(neve.y > altura || (neve.x >= background.limite - 10 && neve.x <= background.limite + 10)){
                 this._neve.splice(i,1);
                 tam--;
                 i--;
@@ -381,6 +415,15 @@ function colisao(obj1, obj2){
     return colidiu;
 }
 
+function click(evt, obj){
+    console.log(`X: ${obj.x} - ${evt.offsetX} - ${obj.x + obj.l} | Y: ${obj.y} - ${evt.offsetY} - ${obj.y + obj.a}      | ${obj.y} & ${obj.a}`)
+    let clicou = false;
+    if( (evt.offsetX >= obj.x && evt.offsetX <= (obj.x + obj.l)) && (evt.offsetY >= obj.y && evt.offsetY <= (obj.y + obj.a)) ){
+        clicou = true;
+    }
+    return clicou;
+}
+
 
 
 function main(){
@@ -392,8 +435,10 @@ function main(){
     ctx = canvas.getContext("2d");
     window.addEventListener('keydown', keydown);
     window.addEventListener('keyup', keyup);
+    window.addEventListener('click', canvasclick);
     window.addEventListener('mouseup', mouseup);
     window.addEventListener('mousedown', mousedown);
+
     img = new Image();
     img.src = "img/sprite.png";
     roda();
@@ -419,6 +464,7 @@ function atualiza(){
     miau.atualiza();
     arvore.colidiu();
     miau.colidiu();
+    plaquinha.colidiu();
     noel.atualiza();
     neve.atualiza();
     menuduvida.atualiza();
@@ -444,8 +490,17 @@ function desenha(){
 }
 main();
 
+function canvasclick(evt){
+    console.log(`canvas x: ${evt.x} y: ${evt.y}`);
+    console.log(evt)
+}
+
+
+
 function mousedown(evt){
-    console.log(evt.x)
+
+
+    /*
     if(evt.x > (noel.x+75)){
         noel.andando = true;
         dx = 1;
@@ -453,11 +508,19 @@ function mousedown(evt){
         noel.andando = true;
         dx = -1;
     }
+    */
 }
 
 function mouseup(evt){
+    menuduvida.clicou(evt);
+    menucartinha.clicou(evt);
+
+
+
+    /*
     noel.andando = false;
     dx = 0;
+    */
 }
 
 function keydown(evt){
