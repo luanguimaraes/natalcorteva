@@ -117,7 +117,9 @@ plaquinha = {
             //$actions.PopupCreditos(true)
             //end outsystems actions
         }else{
+            //outsystems actions
             //$actions.PopupCreditos(false)
+            //end outsystems actions
         }
     }
 }
@@ -311,6 +313,7 @@ game = {
     inicia: function(){
         this.pontos = 0;
         this.tempo = 30;
+        noel.libera();
         this.iniciado = true;
     },
 
@@ -435,7 +438,6 @@ function main(){
     ctx = canvas.getContext("2d");
     window.addEventListener('keydown', keydown);
     window.addEventListener('keyup', keyup);
-    window.addEventListener('click', canvasclick);
     window.addEventListener('mouseup', mouseup);
     window.addEventListener('mousedown', mousedown);
 
@@ -490,12 +492,6 @@ function desenha(){
 }
 main();
 
-function canvasclick(evt){
-    console.log(`canvas x: ${evt.x} y: ${evt.y}`);
-    console.log(evt)
-}
-
-
 
 function mousedown(evt){
 
@@ -512,8 +508,8 @@ function mousedown(evt){
 }
 
 function mouseup(evt){
-    menuduvida.clicou(evt);
-    menucartinha.clicou(evt);
+    //menuduvida.clicou(evt);
+    //menucartinha.clicou(evt);
 
 
 
