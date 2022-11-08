@@ -298,7 +298,8 @@ noel = {
         presente.ativo = true;
 
         //outsystems actions
-        //$actions.OpenPopup(true);
+        //$actions.OpenPopupCartas(false);
+        //$actions.OpenPopupCartas(true);
         //end outsystems actions
     }
 }
@@ -432,6 +433,24 @@ function click(evt, obj){
 function main(){
     largura = 2685;
     altura = 1500;
+
+    if(window.innerWidth <= 500){
+        largura = window.innerWidth;
+        altura = window.innerHeight;
+        back.x = largura+100;
+        back.y = altura-300;
+        arvore.x = -70;
+        arvore.y = 0;
+        music.play();
+
+
+        //outsystems actions
+            //$actions.OpenPopupCartas(true);
+        //end outsystems actions
+
+
+    }
+
     canvas = document.getElementsByClassName("canvas")[0];
     canvas.width = largura;
     canvas.height = altura;
