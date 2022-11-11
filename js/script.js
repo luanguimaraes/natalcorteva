@@ -4,6 +4,9 @@ background = {
     x: 0,
     y: 0,
     limite: 2697,
+    animacao: 0,
+    intervalgame: 0,
+    intervalloop: 0,
 
     atualiza: function(){
        if(noel.limite()){
@@ -16,7 +19,13 @@ background = {
     desenha: function(){
         back.desenha(this.x, this.y)
         back.desenha(this.x + back.largura, this.y);
-    }  
+    },
+    
+    para:function(){
+        window.cancelAnimationFrame(this.animacao);
+        clearInterval(this.intervalgame);
+        clearInterval(this.intervalloop);
+    } 
 }
 
 treno = {
@@ -448,7 +457,6 @@ function main(){
             //$actions.OpenPopupCartas(true);
         //end outsystems actions
 
-
     }
 
     canvas = document.getElementsByClassName("canvas")[0];
@@ -471,7 +479,7 @@ var i = 0;
 function roda(){
     atualiza();
     desenha();
-    window.requestAnimationFrame(roda);
+    background.animacao = window.requestAnimationFrame(roda);
 }
 
 function atualiza(){
@@ -583,18 +591,19 @@ function keyup(evt){
 
 
 function loop(){
-    setInterval(function(){
-        if(noel.andando){
-            noel.numpassosatual++;
-        }else{
-            noel.numpassosatual = 0
-        }
+
+    if(noel.andando){
+        noel.numpassosatual++;
+    }else{
+        noel.numpassosatual = 0
+    }
         
-        if(noel.numpassosatual == noel.numpassostotal){
-            noel.numpassosatual = 0
-        }
-    }, 50);
+    if(noel.numpassosatual == noel.numpassostotal){
+         noel.numpassosatual = 0
+    }
+
 }
+background.intervalloop = setInterval(loop, 50)
 
 function gametempo(){
     if(game.tempo == 0 && game.iniciado){
@@ -603,4 +612,4 @@ function gametempo(){
         game.tempo--;
     }
 }
-setInterval(gametempo,1000)
+background.intervalgame = setInterval(gametempo,1000)
